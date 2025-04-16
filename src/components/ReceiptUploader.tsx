@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { useOCR } from '@/hooks/useOCR';
 import { Upload, Loader2, X } from 'lucide-react';
+import Image from 'next/image';
 
 export function ReceiptUploader() {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -72,13 +73,15 @@ export function ReceiptUploader() {
           </div>
         ) : previewUrl ? (
           <div className="relative">
-            <img
+            <Image
               src={previewUrl}
               alt="Receipt preview"
-              className="max-h-64 mx-auto"
+              width={500}
+              height={500}
+              className="max-h-64 mx-auto object-contain"
             />
             <button
-              onClick={(e) => {
+              onClick={e => {
                 e.stopPropagation();
                 handleReset();
               }}
@@ -91,18 +94,12 @@ export function ReceiptUploader() {
           <div className="flex flex-col items-center gap-2">
             <Upload className="w-8 h-8 text-secondary-500" />
             <p>Drag and drop a receipt image here, or click to select</p>
-            <p className="text-sm text-secondary-500">
-              Supported formats: JPG, PNG, PDF
-            </p>
+            <p className="text-sm text-secondary-500">Supported formats: JPG, PNG, PDF</p>
           </div>
         )}
       </div>
 
-      {error && (
-        <div className="p-4 bg-red-50 text-red-600 rounded-lg">
-          {error}
-        </div>
-      )}
+      {error && <div className="p-4 bg-red-50 text-red-600 rounded-lg">{error}</div>}
 
       {lineItems && (
         <div className="space-y-2">
@@ -116,15 +113,9 @@ export function ReceiptUploader() {
                 <span>{item.description}</span>
                 <div className="flex gap-4">
                   {item.quantity && (
-                    <span className="text-secondary-500">
-                      Qty: {item.quantity}
-                    </span>
+                    <span className="text-secondary-500">Qty: {item.quantity}</span>
                   )}
-                  {item.price && (
-                    <span className="font-medium">
-                      ${item.price.toFixed(2)}
-                    </span>
-                  )}
+                  {item.price && <span className="font-medium">${item.price.toFixed(2)}</span>}
                 </div>
               </div>
             ))}
@@ -133,4 +124,4 @@ export function ReceiptUploader() {
       )}
     </div>
   );
-} 
+}
